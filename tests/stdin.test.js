@@ -144,3 +144,27 @@ test('getProviderLabel returns null when CLAUDE_CODE_USE_BEDROCK=0', () => {
     else process.env.CLAUDE_CODE_USE_BEDROCK = orig;
   }
 });
+
+test('getProviderLabel returns Vertex when CLAUDE_CODE_USE_VERTEX=1', () => {
+  const orig = process.env.CLAUDE_CODE_USE_VERTEX;
+  try {
+    process.env.CLAUDE_CODE_USE_VERTEX = '1';
+    const result = getProviderLabel({ model: { id: 'claude-3-5-sonnet@20241022' } });
+    assert.equal(result, 'Vertex');
+  } finally {
+    if (orig === undefined) delete process.env.CLAUDE_CODE_USE_VERTEX;
+    else process.env.CLAUDE_CODE_USE_VERTEX = orig;
+  }
+});
+
+test('getProviderLabel returns null for @-style model IDs without CLAUDE_CODE_USE_VERTEX', () => {
+  const orig = process.env.CLAUDE_CODE_USE_VERTEX;
+  try {
+    delete process.env.CLAUDE_CODE_USE_VERTEX;
+    const result = getProviderLabel({ model: { id: 'claude-3-5-sonnet@20241022' } });
+    assert.equal(result, null);
+  } finally {
+    if (orig === undefined) delete process.env.CLAUDE_CODE_USE_VERTEX;
+    else process.env.CLAUDE_CODE_USE_VERTEX = orig;
+  }
+});

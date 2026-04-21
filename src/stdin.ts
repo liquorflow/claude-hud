@@ -238,14 +238,6 @@ export function isBedrockModelId(modelId?: string): boolean {
   return normalized.includes('anthropic.claude-');
 }
 
-// Vertex AI model IDs use '@' as version separator (e.g. claude-3-5-sonnet@20241022)
-export function isVertexModelId(modelId?: string): boolean {
-  if (!modelId) {
-    return false;
-  }
-  return modelId.includes('@');
-}
-
 const ENTERPRISE_MODEL_IDS = new Set(['opusplan', 'sonnetplan', 'haikuplan']);
 
 export function isEnterpriseModelId(modelId?: string): boolean {

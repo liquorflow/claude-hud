@@ -433,6 +433,48 @@ test('resolveSessionCost ignores native cost for provider-routed sessions', () =
   }
 });
 
+test('resolveSessionCost ignores native and estimated cost for Vertex AI sessions', () => {
+  process.env.CLAUDE_CODE_USE_VERTEX = '1';
+  try {
+    const cost = resolveSessionCost(
+      {
+        model: { id: 'claude-3-5-sonnet@20241022', display_name: 'Claude Sonnet 3.5' },
+        cost: { total_cost_usd: 0.12 },
+      },
+      {
+        inputTokens: 100000,
+        cacheCreationTokens: 10000,
+        cacheReadTokens: 20000,
+        outputTokens: 50000,
+      },
+    );
+
+    assert.equal(cost, null);
+  } finally {
+    delete process.env.CLAUDE_CODE_USE_VERTEX;
+  }
+});
+
+test('resolveSessionCost does not suppress cost for @-style model IDs without Vertex env', () => {
+  const cost = resolveSessionCost(
+    {
+      model: { id: 'claude-3-5-sonnet@20241022', display_name: 'Claude Sonnet 3.5' },
+      cost: { total_cost_usd: 0.12 },
+    },
+    {
+      inputTokens: 100000,
+      cacheCreationTokens: 10000,
+      cacheReadTokens: 20000,
+      outputTokens: 50000,
+    },
+  );
+
+  assert.deepEqual(cost, {
+    totalUsd: 0.12,
+    source: 'native',
+  });
+});
+
 test('resolveSessionCost falls back when native cost is invalid', () => {
   const cost = resolveSessionCost(
     {

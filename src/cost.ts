@@ -1,5 +1,5 @@
 import type { SessionTokenUsage, StdinData } from './types.js';
-import { isBedrockModelId, isVertexModelId } from './stdin.js';
+import { isBedrockModelId } from './stdin.js';
 
 type ModelPricing = {
   inputUsdPerMillion: number;
@@ -79,6 +79,10 @@ function getAnthropicPricing(stdin: StdinData): ModelPricing | null {
   return null;
 }
 
+function hasRoutedProviderPricing(stdin: StdinData): boolean {
+  return isBedrockModelId(stdin.model?.id) || process.env.CLAUDE_CODE_USE_VERTEX === '1';
+}
+
 export function estimateSessionCost(
   stdin: StdinData,
   sessionTokens: SessionTokenUsage | undefined,
@@ -87,11 +91,7 @@ export function estimateSessionCost(
     return null;
   }
 
-  if (isBedrockModelId(stdin.model?.id)) {
-    return null;
-  }
-
-  if (isVertexModelId(stdin.model?.id)) {
+  if (hasRoutedProviderPricing(stdin)) {
     return null;
   }
 
@@ -128,11 +128,7 @@ function getNativeCostUsd(stdin: StdinData): number | null {
     return null;
   }
 
-  if (isBedrockModelId(stdin.model?.id)) {
-    return null;
-  }
-
-  if (isVertexModelId(stdin.model?.id)) {
+  if (hasRoutedProviderPricing(stdin)) {
     return null;
   }
 
