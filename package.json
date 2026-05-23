@@ -21,7 +21,7 @@
     "ai",
     "plugin"
   ],
-  "author": "",
+  "author": "personal fork",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",
@@ -47,5 +47,6 @@
   },
   "bugs": {
     "url": "https://github.com/jarrodwatts/claude-hud/issues"
-  }
+  },
+  "homepage": "https://github.com/jarrodwatts/claude-hud#readme"
 }
