@@ -30,7 +30,7 @@ async function streamResponse(userMessage: string): Promise<void> {
 
   const stream = await client.messages.stream({
     model: "claude-opus-4-5",
-    max_tokens: 1024,
+    max_tokens: 2048,
     system:
       "You are Claude, a helpful AI assistant. Provide clear, concise, and accurate responses.",
     messages: conversationHistory,
@@ -63,6 +63,7 @@ function displayHeader(): void {
   console.log("\x1b[35m║       Claude HUD v1.0      ║\x1b[0m");
   console.log("\x1b[35m╚════════════════════════════╝\x1b[0m");
   console.log('\x1b[90mType your message and press Enter. Type "exit" to quit.\x1b[0m');
+  // also supports "clear" to reset conversation history
   console.log();
 }
 
